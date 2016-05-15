@@ -58,11 +58,11 @@ if __name__=='__main__':
     
     parser.add_argument('-n', action='store',
                       dest='ioport_name',
-                      help='name of MIDI port communicating with SH-201')
-    parser.add_argument('-b', '--backup_directory', action='store', dest='backup_directory',
+                      help='(optional) name of MIDI port communicating with SH-201')
+    parser.add_argument('-d', '--backup_directory', action='store', dest='backup_directory',
                            help='directory to store patches')
     parser.add_argument('-p', '--backup_prefix', action='store', dest='backup_prefix',
-                           help='use in conjunction with `-b` to specify a file name prefix')
+                           help='use in conjunction with `-d` to specify a file name prefix')
     args = parser.parse_args()
     print(args.ioport_name)
     sh201 = SH201Librarian(ioport_name=getattr(args, 'ioport_name', None))

@@ -7,7 +7,7 @@ dumps all of your user patches to .syx files. there they can live until I or som
  - mido (`pip install mido`)
 
 # how to use it:
-- clone this git repository `git clone LINK`
+- clone this git repository `git clone https://github.com/r-b-g-b/SH201Librarian.git`
 - `cd SH201Librarian`
 - `python librarian.py -d DIRECTORY -p PREFIX -n MIDIIOPORTNAME`
 

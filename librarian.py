@@ -23,7 +23,7 @@ class SH201SysExMessage(object):
             self.message.data = msg
             
     def _compute_checksum(self):
-        return 128 - sum(self.addr + self.data)%128
+        return 127 - sum(self.addr + self.data)%128
 
     @property
     def msg_type(self):
@@ -148,23 +148,32 @@ class SH201Librarian(object):
         for i, (bank, prog) in enumerate(product(['A','B','C','D'], range(1,9))):
             program_name = '%s%i' % (bank, prog)
             print(program_name, end=' ', flush=True)
-            write_syx_file(os.path.join(directory, prefix+'%s.syx'%p), self.download_patch(i))
+            write_syx_file(os.path.join(directory, '%s%s.syx'%(prefix, program_name)),
+                           self.download_patch(i))
             
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description = '''
     Simple librarian for your SH-201
     ''')
     
-    parser.add_argument('-n', action='store',
+    parser.add_argument('--ioport_name', action='store',
                       dest='ioport_name',
                       help='(optional) name of MIDI port communicating with SH-201')
-    parser.add_argument('-d', '--backup_directory', action='store', dest='backup_directory',
+    parser.add_argument('--backup_directory', action='store', dest='backup_directory',
                            help='directory to store patches')
-    parser.add_argument('-p', '--backup_prefix', action='store', dest='backup_prefix',
-                           help='use in conjunction with `-d` to specify a file name prefix')
+    parser.add_argument('--backup_prefix', action='store', dest='backup_prefix',
+                           help='use in conjunction with `--backup_directory` to specify a file name prefix')
+    parser.add_argument('--patch_path', action='store', dest='patch_path',
+                        help='upload the patch at this path to your SH-201'
+                       )
+    parser.add_argument('--program_number', action='store', dest='program_number',
+                        help='specifies the bank you want to overwrite with the patch at `--patch_path`'
+                       )
     args = parser.parse_args()
-    print(args.ioport_name)
     sh201 = SH201Librarian(ioport_name=getattr(args, 'ioport_name', None))
-    if hasattr(args, 'backup_directory'):
+    if not args.backup_directory is None:
         print('Backing up patches to %s'%args.backup_directory)
         sh201.backup_all(directory=args.backup_directory, prefix=args.backup_prefix)
+    elif not args.patch_path is None:
+        print('Uploading patch at %s to your SH-201 at location %s' % (args.patch_path, args.program_number))
+        sh201.upload_patch(args.program_number, args.patch_path)

@@ -160,12 +160,13 @@ if __name__=='__main__':
     ''')
     
     parser.add_argument('--ioport_name', action='store',
-                      dest='ioport_name',
-                      help='(optional) name of MIDI port communicating with SH-201')
+                        dest='ioport_name',
+                        help='(optional) name of MIDI port communicating with SH-201')
     parser.add_argument('--backup_directory', action='store', dest='backup_directory',
                            help='directory to store patches')
     parser.add_argument('--backup_prefix', action='store', dest='backup_prefix',
-                           help='use in conjunction with `--backup_directory` to specify a file name prefix')
+                        default='patch_',
+                        help='use in conjunction with `--backup_directory` to specify a file name prefix')
     parser.add_argument('--patch_path', action='store', dest='patch_path',
                         help='upload the patch at this path to your SH-201'
                        )
@@ -174,7 +175,7 @@ if __name__=='__main__':
                        )
     args = parser.parse_args()
     sh201 = SH201Librarian(ioport_name=getattr(args, 'ioport_name', None))
-    if not args.backup_directory is None:
+    if args.backup_directory is not None:
         print('Backing up patches to %s'%args.backup_directory)
         sh201.backup_all(directory=args.backup_directory, prefix=args.backup_prefix)
     elif not args.patch_path is None:

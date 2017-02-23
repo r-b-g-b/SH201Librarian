@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+from __future__ import print_function
+import sys
 from mido import Message, open_ioport, get_ioport_names, write_syx_file, read_syx_file
 import time
 import os
@@ -147,7 +150,7 @@ class SH201Librarian(object):
     def backup_all(self, directory, prefix='patch_'):
         for i, (bank, prog) in enumerate(product(['A','B','C','D'], range(1,9))):
             program_name = '%s%i' % (bank, prog)
-            print(program_name, end=' ', flush=True)
+            print(program_name, end=' ')
             write_syx_file(os.path.join(directory, '%s%s.syx'%(prefix, program_name)),
                            self.download_patch(i))
             
